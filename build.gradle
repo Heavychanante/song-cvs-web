@@ -24,3 +24,9 @@ buildscript {
 		classpath("com.bmuschko:gradle-docker-plugin:${dockerPluginVersion}")
 	}
 }
+
+// Create Web App Image
+task buildWebAppImage(type: DockerBuildImage, dependsOn: [npm_run_build]) {
+    inputDir = file('docker/web')
+    tag = 'song-cvs/web:latest'
+}
