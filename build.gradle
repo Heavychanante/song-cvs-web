@@ -1,0 +1,43 @@
+apply plugin: 'com.moowork.node'
+apply plugin: 'eclipse'
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+
+version = '1.0.0-SNAPSHOT'
+
+buildscript {
+	ext {
+		nodePluginVersion = '1.2.0'
+		dockerPluginVersion = '3.2.0'
+	}
+	repositories {
+		maven {
+	      url "https://plugins.gradle.org/m2/"
+    	}
+		mavenCentral()
+		jcenter()
+	}
+	dependencies {
+		classpath("com.moowork.gradle:gradle-node-plugin:${nodePluginVersion}")
+		classpath("com.bmuschko:gradle-docker-plugin:${dockerPluginVersion}")
+	}
+}
+
+// Create Web App Image
+task buildWebAppImage(type: DockerBuildImage, dependsOn: [npm_run_build]) {
+    inputDir = file('docker/web')
+    tag = 'song-cvs/web:latest'
+}
+
+// Creates Web Image container
+task createWebAppImageContainer(type:DockerCreateContainer, dependsOn: [buildWebAppImage]) {
+	targetImageId { 'song-cvs/web:latest' }
+	portBindings = ['8082:80']
+}
+
+// Runs the Web App container
+task startWebAppImageContainer(type: DockerStartContainer, dependsOn: createWebAppImageContainer) {
+    targetContainerId { createWebAppImageContainer.getContainerId() }
+}
