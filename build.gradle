@@ -30,3 +30,14 @@ task buildWebAppImage(type: DockerBuildImage, dependsOn: [npm_run_build]) {
     inputDir = file('docker/web')
     tag = 'song-cvs/web:latest'
 }
+
+// Creates Web Image container
+task createWebAppImageContainer(type:DockerCreateContainer, dependsOn: [buildWebAppImage]) {
+	targetImageId { 'song-cvs/web:latest' }
+	portBindings = ['8082:80']
+}
+
+// Runs the Web App container
+task startWebAppImageContainer(type: DockerStartContainer, dependsOn: createWebAppImageContainer) {
+    targetContainerId { createWebAppImageContainer.getContainerId() }
+}
