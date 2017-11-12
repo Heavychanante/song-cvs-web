@@ -1,0 +1,22 @@
+<table class="table table-bordered table-hover">
+
+    <!--Table head-->
+    <thead class="mdb-color darken-3">
+        <tr class="text-white">
+            <th>#</th>
+            <th>Name</th>
+            <th>Creation</th>
+        </tr>
+    </thead>
+    <!--Table head-->
+
+    <!--Table body-->
+    <tbody>
+        <tr *ngFor="let song of songs">
+            <th scope="row">{{ song.id }}</th>
+            <td>{{ song.name }}</td>
+            <td>{{ song.creation }}</td>
+        </tr>
+    </tbody>
+    <!--Table body-->
+</table>
